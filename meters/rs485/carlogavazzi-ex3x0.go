@@ -5,16 +5,16 @@ import (
 )
 
 func init() {
-	Register("CGEM24", NewCarloGavazziProducer)
+	Register("CGEX3X0", NewCarloGavazziEx3xProducer)
 }
 
-type CarloGavazziProducer struct {
+type CarloGavazziEx3xProducer struct {
 	Opcodes
 }
 
-func NewCarloGavazziProducer() Producer {
+func NewCarloGavazziEx3xProducer() Producer {
 	/***
-	 * https://www.aggsoft.com/serial-data-logger/tutorials/modbus-data-logging/carlo-gavazzi-em24.htm
+	 * https://github.com/volkszaehler/mbmd/files/10538388/EM330_EM340_ET330_ET340_CP.pdf
 	 */
 	ops := Opcodes{
 		VoltageL1: 0x00,
@@ -38,15 +38,15 @@ func NewCarloGavazziProducer() Producer {
 		ImportL3:  0x44,
 		Export:    0x4E,
 	}
-	return &CarloGavazziProducer{Opcodes: ops}
+	return &CarloGavazziEx3xProducer{Opcodes: ops}
 }
 
 // Description implements Producer interface
-func (p *CarloGavazziProducer) Description() string {
-	return "Carlo Gavazzi EM24/ET340"
+func (p *CarloGavazziEx3xProducer) Description() string {
+	return "Carlo Gavazzi EM/ET 330/340"
 }
 
-func (p *CarloGavazziProducer) snip16(iec Measurement, scaler ...float64) Operation {
+func (p *CarloGavazziEx3xProducer) snip16(iec Measurement, scaler ...float64) Operation {
 	transform := RTUInt16ToFloat64 // default conversion
 	if len(scaler) > 0 {
 		transform = MakeScaledTransform(transform, scaler[0])
@@ -62,7 +62,7 @@ func (p *CarloGavazziProducer) snip16(iec Measurement, scaler ...float64) Operat
 	return operation
 }
 
-func (p *CarloGavazziProducer) snip32(iec Measurement, scaler ...float64) Operation {
+func (p *CarloGavazziEx3xProducer) snip32(iec Measurement, scaler ...float64) Operation {
 	transform := RTUInt32ToFloat64Swapped // default conversion
 	if len(scaler) > 0 {
 		transform = MakeScaledTransform(transform, scaler[0])
@@ -79,12 +79,12 @@ func (p *CarloGavazziProducer) snip32(iec Measurement, scaler ...float64) Operat
 }
 
 // Probe implements Producer interface
-func (p *CarloGavazziProducer) Probe() Operation {
+func (p *CarloGavazziEx3xProducer) Probe() Operation {
 	return p.snip32(VoltageL1, 10)
 }
 
 // Produce implements Producer interface
-func (p *CarloGavazziProducer) Produce() (res []Operation) {
+func (p *CarloGavazziEx3xProducer) Produce() (res []Operation) {
 	for _, op := range []Measurement{
 		VoltageL1, VoltageL2, VoltageL3,
 	} {

@@ -15,7 +15,8 @@ mbmd run [flags]
                                      Valid types are:
                                        RTU
                                          ABB       ABB A/B-Series meters
-                                         CGEM24    Carlo Gavazzi EM24/ET340
+                                         CGEM24    Carlo Gavazzi EM24
+                                         CGEX3X0   Carlo Gavazzi EM/ET 330/340
                                          DDM       DDM18SD
                                          DZG       DZG Metering GmbH DVH4013 meters
                                          IEM3000   Schneider Electric iEM3000 series
@@ -52,6 +53,7 @@ mbmd run [flags]
       --mqtt-qos int                 MQTT quality of service 0,1,2 (default 0)
       --mqtt-topic string            MQTT root topic. Set empty to disable publishing. (default "mbmd")
       --mqtt-user string             MQTT user (optional)
+      --profile string               Add pprof debug information
   -r, --rate duration                Rate limit. Devices will not be queried more often than rate limit. (default 1s)
 ```
 
